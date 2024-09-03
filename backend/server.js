@@ -15,8 +15,10 @@ const reportRoutes = require('./routes/reportRoutes');
 app.use(cors());
 app.use(express.json());
 
+const uri = process.env.MONGODB_URI;
+
 // Conectar a MongoDB
-mongoose.connect(process.env.MONGODB_URI, {
+mongoose.connect(uri, {
     serverSelectionTimeoutMS: 50000 // 50 segundos
 })
     .then(() => console.log('Conectado a MongoDB'))
