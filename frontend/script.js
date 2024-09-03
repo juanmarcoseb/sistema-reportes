@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.eliminarReporte = function(id) {
         if (confirm('¿Estás seguro de que deseas eliminar este reporte?')) {
-            fetch(`http://localhost:3000/reportes/${id}`, {
+            fetch(`https://sistema-reportes.onrender.com/reportes/${id}`, {
                 method: 'DELETE'
             })
             .then(response => response.json())
@@ -62,16 +62,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
 
-        // Calcula la posición centrada del título
         const titulo = 'Reporte de Iglesia:';
         const pageWidth = doc.internal.pageSize.getWidth();
         const tituloWidth = doc.getStringUnitWidth(titulo) * doc.internal.getFontSize() / doc.internal.scaleFactor;
         const xCenter = (pageWidth - tituloWidth) / 2;
 
-        // Añade el título centrado
         doc.text(titulo, xCenter, 10);
 
-        // Datos de la tabla
         const tableData = [
             ['Fecha', reporte.fecha],
             ['Hora de Inicio', reporte.horaInicio],
@@ -86,23 +83,21 @@ document.addEventListener('DOMContentLoaded', () => {
             ['Pasó algo fuera de lo normal', reporte.fueraDeLoNormal]
         ];
 
-        // Genera la tabla con los datos
         doc.autoTable({
             head: [['', '']],
             body: tableData,
             startY: 20,
-            theme: 'grid' // Agrega bordes a la tabla
+            theme: 'grid'
         });
 
-        // Formatea la fecha para el nombre del archivo
-        const fechaFormateada = reporte.fecha.replace(/\//g, '-'); // Reemplaza '/' con '-' para un nombre de archivo válido
+        const fechaFormateada = reporte.fecha.replace(/\//g, '-');
         const nombreArchivo = `reporte-${fechaFormateada}.pdf`;
 
         doc.save(nombreArchivo);
     };
 
     function crearReporte(data) {
-        fetch('http://localhost:3000/reportes', {
+        fetch('https://sistema-reportes.onrender.com/reportes', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
@@ -118,7 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function obtenerReportes() {
-        fetch('http://localhost:3000/reportes')
+        fetch('https://sistema-reportes.onrender.com/reportes')
         .then(response => response.json())
         .then(reportes => {
             const reportesBody = document.getElementById('reportesBody');
@@ -148,3 +143,4 @@ document.addEventListener('DOMContentLoaded', () => {
         .catch(error => console.error('Error al obtener los reportes:', error));
     }
 });
+
