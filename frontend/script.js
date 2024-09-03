@@ -1,35 +1,64 @@
 document.addEventListener('DOMContentLoaded', () => {
     const crearReporteBtn = document.getElementById('crearReporte');
     const verHistorialBtn = document.getElementById('verHistorial');
+    const menuPrincipal = document.getElementById('menuPrincipal');
     const formularioReporte = document.getElementById('formularioReporte');
     const historialReportes = document.getElementById('historialReportes');
     const volverMenuBtn = document.getElementById('volverMenu');
     const volverMenuHistorialBtn = document.getElementById('volverMenuHistorial');
+    const reporteForm = document.getElementById('reporteForm');
+    const guardarBtn = document.getElementById('guardarReporte');
 
-    // Mostrar el formulario de creación de reporte
     crearReporteBtn.addEventListener('click', () => {
+        menuPrincipal.style.display = 'none';
         formularioReporte.style.display = 'block';
         historialReportes.style.display = 'none';
+        reporteForm.reset();
     });
 
-    // Mostrar el historial de reportes
     verHistorialBtn.addEventListener('click', () => {
+        menuPrincipal.style.display = 'none';
         formularioReporte.style.display = 'none';
         historialReportes.style.display = 'block';
-        obtenerReportes(); // Llamar a la API para obtener reportes
+        obtenerReportes();
     });
 
-    // Volver al menú principal
     volverMenuBtn.addEventListener('click', () => {
         formularioReporte.style.display = 'none';
+        menuPrincipal.style.display = 'block';
     });
 
     volverMenuHistorialBtn.addEventListener('click', () => {
         historialReportes.style.display = 'none';
+        menuPrincipal.style.display = 'block';
     });
 
-    // Función para enviar un nuevo reporte al servidor
-    const enviarReporte = (data) => {
+    guardarBtn.addEventListener('click', (event) => {
+        event.preventDefault();
+        const formData = new FormData(reporteForm);
+        const data = Object.fromEntries(formData.entries());
+        data.fluyo = data.fluyo === 'true';
+        data.huboLiberacion = data.huboLiberacion === 'true';
+        crearReporte(data);
+    });
+
+    window.eliminarReporte = function(id) {
+        if (confirm('¿Estás seguro de que deseas eliminar este reporte?')) {
+            fetch(`http://localhost:3000/reportes/${id}`, {
+                method: 'DELETE'
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert('Reporte eliminado con éxito!');
+                obtenerReportes();
+            })
+            .catch(error => {
+                console.error('Error al eliminar el reporte:', error);
+            });
+        }
+    };
+
+    function crearReporte(data) {
         fetch('http://localhost:3000/reportes', {
             method: 'POST',
             headers: {
@@ -39,23 +68,25 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .then(response => response.json())
         .then(data => {
-            alert('Reporte creado con éxito!');
+            alert('Reporte creado exitosamente!');
+            reporteForm.reset();
+            formularioReporte.style.display = 'none';
+            menuPrincipal.style.display = 'block';
         })
         .catch(error => {
             console.error('Error al crear el reporte:', error);
         });
-    };
+    }
 
-    // Función para obtener todos los reportes
-    const obtenerReportes = () => {
+    function obtenerReportes() {
         fetch('http://localhost:3000/reportes')
         .then(response => response.json())
-        .then(reportes => {
-            const tablaReportes = document.querySelector('#historialReportes table');
-            tablaReportes.innerHTML = ''; // Limpiar tabla antes de añadir
-            reportes.forEach(reporte => {
-                const fila = document.createElement('tr');
-                fila.innerHTML = `
+        .then(data => {
+            const reportesBody = document.getElementById('reportesBody');
+            reportesBody.innerHTML = '';
+            data.forEach(reporte => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
                     <td>${reporte.fecha}</td>
                     <td>${reporte.horaInicio}</td>
                     <td>${reporte.horaFin}</td>
@@ -67,23 +98,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     <td>${reporte.huboLiberacion ? 'Sí' : 'No'}</td>
                     <td>${reporte.huboConvertidos}</td>
                     <td>${reporte.fueraDeLoNormal}</td>
+                    <td>
+                        <button class="btn btn-danger" onclick="eliminarReporte('${reporte._id}')">Eliminar</button>
+                    </td>
                 `;
-                tablaReportes.appendChild(fila);
+                reportesBody.appendChild(row);
             });
         })
         .catch(error => {
             console.error('Error al obtener los reportes:', error);
         });
-    };
-
-    // Agregar evento al formulario
-    const reporteForm = document.getElementById('reporteForm');
-    reporteForm.addEventListener('submit', (event) => {
-        event.preventDefault();
-        const formData = new FormData(reporteForm);
-        const data = Object.fromEntries(formData.entries());
-        data.fluyo = data.fluyo === 'true'; // Convertir a booleano
-        data.huboLiberacion = data.huboLiberacion === 'true'; // Convertir a booleano
-        enviarReporte(data);
-    });
+    }
 });
