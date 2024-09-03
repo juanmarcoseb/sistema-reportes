@@ -71,18 +71,28 @@ document.addEventListener('DOMContentLoaded', () => {
         // Añade el título centrado
         doc.text(titulo, xCenter, 10);
 
-        // Añade el resto del contenido del PDF
-        doc.text(`Fecha: ${reporte.fecha}`, 10, 20);
-        doc.text(`Hora de Inicio: ${reporte.horaInicio}`, 10, 30);
-        doc.text(`Hora de Finalización: ${reporte.horaFin}`, 10, 40);
-        doc.text(`Cantidad de Profecías: ${reporte.cantidadProfecias}`, 10, 50);
-        doc.text(`Predicador: ${reporte.predicador}`, 10, 60);
-        doc.text(`Tema: ${reporte.tema}`, 10, 70);
-        doc.text(`Asistencia: ${reporte.asistencia}`, 10, 80);
-        doc.text(`Fluyó: ${reporte.fluyo ? 'Sí' : 'No'}`, 10, 90);
-        doc.text(`Hubo Liberación: ${reporte.huboLiberacion ? 'Sí' : 'No'}`, 10, 100);
-        doc.text(`Número de Convertidos: ${reporte.huboConvertidos}`, 10, 110);
-        doc.text(`Pasó algo fuera de lo normal: ${reporte.fueraDeLoNormal}`, 10, 120);
+        // Datos de la tabla
+        const tableData = [
+            ['Fecha', reporte.fecha],
+            ['Hora de Inicio', reporte.horaInicio],
+            ['Hora de Finalización', reporte.horaFin],
+            ['Cantidad de Profecías', reporte.cantidadProfecias],
+            ['Predicador', reporte.predicador],
+            ['Tema', reporte.tema],
+            ['Asistencia', reporte.asistencia],
+            ['Fluyó', reporte.fluyo ? 'Sí' : 'No'],
+            ['Hubo Liberación', reporte.huboLiberacion ? 'Sí' : 'No'],
+            ['Número de Convertidos', reporte.huboConvertidos],
+            ['Pasó algo fuera de lo normal', reporte.fueraDeLoNormal]
+        ];
+
+        // Genera la tabla con los datos
+        doc.autoTable({
+            head: [['', '']],
+            body: tableData,
+            startY: 20,
+            theme: 'grid' // Agrega bordes a la tabla
+        });
 
         // Formatea la fecha para el nombre del archivo
         const fechaFormateada = reporte.fecha.replace(/\//g, '-'); // Reemplaza '/' con '-' para un nombre de archivo válido
