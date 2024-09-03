@@ -61,7 +61,17 @@ document.addEventListener('DOMContentLoaded', () => {
     window.generarPDF = function(reporte) {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
-        doc.text('Reporte de Iglesia', 10, 10);
+
+        // Calcula la posición centrada del título
+        const titulo = 'Reporte de Iglesia:';
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const tituloWidth = doc.getStringUnitWidth(titulo) * doc.internal.getFontSize() / doc.internal.scaleFactor;
+        const xCenter = (pageWidth - tituloWidth) / 2;
+
+        // Añade el título centrado
+        doc.text(titulo, xCenter, 10);
+
+        // Añade el resto del contenido del PDF
         doc.text(`Fecha: ${reporte.fecha}`, 10, 20);
         doc.text(`Hora de Inicio: ${reporte.horaInicio}`, 10, 30);
         doc.text(`Hora de Finalización: ${reporte.horaFin}`, 10, 40);
@@ -73,7 +83,12 @@ document.addEventListener('DOMContentLoaded', () => {
         doc.text(`Hubo Liberación: ${reporte.huboLiberacion ? 'Sí' : 'No'}`, 10, 100);
         doc.text(`Número de Convertidos: ${reporte.huboConvertidos}`, 10, 110);
         doc.text(`Pasó algo fuera de lo normal: ${reporte.fueraDeLoNormal}`, 10, 120);
-        doc.save('reporte.pdf');
+
+        // Formatea la fecha para el nombre del archivo
+        const fechaFormateada = reporte.fecha.replace(/\//g, '-'); // Reemplaza '/' con '-' para un nombre de archivo válido
+        const nombreArchivo = `reporte-${fechaFormateada}.pdf`;
+
+        doc.save(nombreArchivo);
     };
 
     function crearReporte(data) {
