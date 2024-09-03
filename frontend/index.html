@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Sistema de Reportes para Iglesia</title>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Bienvenido a tu sistema de reportes</h1>
+        <button id="crearReporte" class="btn btn-primary mt-3">Crear un reporte</button>
+        <button id="verHistorial" class="btn btn-secondary mt-3">Ver historial de reportes</button>
+        
+        <!-- Sección de formulario para crear un reporte -->
+        <div id="formularioReporte" class="mt-4" style="display:none;">
+            <h2>Crear un Nuevo Reporte</h2>
+            <form id="reporteForm">
+                <!-- Campos del formulario -->
+                <div class="mb-3">
+                    <label for="fecha" class="form-label">Fecha</label>
+                    <input type="date" class="form-control" id="fecha" name="fecha" required>
+                </div>
+                <div class="mb-3">
+                    <label for="horaInicio" class="form-label">Hora de Inicio</label>
+                    <input type="time" class="form-control" id="horaInicio" name="horaInicio" required>
+                </div>
+                <div class="mb-3">
+                    <label for="horaFin" class="form-label">Hora de Finalización</label>
+                    <input type="time" class="form-control" id="horaFin" name="horaFin" required>
+                </div>
+                <div class="mb-3">
+                    <label for="cantidadProfecias" class="form-label">Cantidad de Profecías</label>
+                    <input type="number" class="form-control" id="cantidadProfecias" name="cantidadProfecias" required>
+                </div>
+                <div class="mb-3">
+                    <label for="predicador" class="form-label">Quien Predicó</label>
+                    <input type="text" class="form-control" id="predicador" name="predicador" required>
+                </div>
+                <div class="mb-3">
+                    <label for="tema" class="form-label">Tema</label>
+                    <input type="text" class="form-control" id="tema" name="tema" required>
+                </div>
+                <div class="mb-3">
+                    <label for="asistencia" class="form-label">Asistencia</label>
+                    <input type="number" class="form-control" id="asistencia" name="asistencia" required>
+                </div>
+                <div class="mb-3">
+                    <label for="fluyo" class="form-label">Fluyó</label>
+                    <select class="form-control" id="fluyo" name="fluyo" required>
+                        <option value="true">Sí</option>
+                        <option value="false">No</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="huboLiberacion" class="form-label">Hubo Liberación</label>
+                    <select class="form-control" id="huboLiberacion" name="huboLiberacion" required>
+                        <option value="true">Sí</option>
+                        <option value="false">No</option>
+                    </select>
+                </div>
+                <!-- Campo modificado para número de convertidos -->
+                <div class="mb-3">
+                    <label for="huboConvertidos" class="form-label">Número de Convertidos</label>
+                    <input type="number" class="form-control" id="huboConvertidos" name="huboConvertidos" required>
+                </div>
+                <div class="mb-3">
+                    <label for="fueraDeLoNormal" class="form-label">Pasó algo fuera de lo normal</label>
+                    <textarea class="form-control" id="fueraDeLoNormal" name="fueraDeLoNormal" rows="3"></textarea>
+                </div>
+                <button type="submit" class="btn btn-success">Guardar Reporte</button>
+                <button type="button" id="volverMenu" class="btn btn-secondary">Volver al Menú Principal</button>
+            </form>
+        </div>
+
+        <div id="historialReportes" class="mt-4" style="display:none;">
+            <h2>Historial de Reportes</h2>
+            <!-- Tabla para mostrar el historial de reportes -->
+            <table class="table">
+                <!-- Aquí se agregarán dinámicamente los reportes -->
+            </table>
+            <button type="button" id="volverMenuHistorial" class="btn btn-secondary">Volver al Menú Principal</button>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
