@@ -58,35 +58,49 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    window.generarPDF = function(reporte) {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        doc.text('Reporte de Iglesia', 10, 10);
+        doc.text(`Fecha: ${reporte.fecha}`, 10, 20);
+        doc.text(`Hora de Inicio: ${reporte.horaInicio}`, 10, 30);
+        doc.text(`Hora de Finalización: ${reporte.horaFin}`, 10, 40);
+        doc.text(`Cantidad de Profecías: ${reporte.cantidadProfecias}`, 10, 50);
+        doc.text(`Predicador: ${reporte.predicador}`, 10, 60);
+        doc.text(`Tema: ${reporte.tema}`, 10, 70);
+        doc.text(`Asistencia: ${reporte.asistencia}`, 10, 80);
+        doc.text(`Fluyó: ${reporte.fluyo ? 'Sí' : 'No'}`, 10, 90);
+        doc.text(`Hubo Liberación: ${reporte.huboLiberacion ? 'Sí' : 'No'}`, 10, 100);
+        doc.text(`Número de Convertidos: ${reporte.huboConvertidos}`, 10, 110);
+        doc.text(`Pasó algo fuera de lo normal: ${reporte.fueraDeLoNormal}`, 10, 120);
+        doc.save('reporte.pdf');
+    };
+
     function crearReporte(data) {
         fetch('http://localhost:3000/reportes', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
         })
         .then(response => response.json())
         .then(data => {
-            alert('Reporte creado exitosamente!');
+            alert('Reporte creado exitosamente');
             reporteForm.reset();
-            formularioReporte.style.display = 'none';
             menuPrincipal.style.display = 'block';
+            formularioReporte.style.display = 'none';
         })
-        .catch(error => {
-            console.error('Error al crear el reporte:', error);
-        });
+        .catch(error => console.error('Error al crear el reporte:', error));
     }
 
     function obtenerReportes() {
         fetch('http://localhost:3000/reportes')
         .then(response => response.json())
-        .then(data => {
+        .then(reportes => {
             const reportesBody = document.getElementById('reportesBody');
             reportesBody.innerHTML = '';
-            data.forEach(reporte => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
+            reportes.forEach(reporte => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
                     <td>${reporte.fecha}</td>
                     <td>${reporte.horaInicio}</td>
                     <td>${reporte.horaFin}</td>
@@ -100,13 +114,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     <td>${reporte.fueraDeLoNormal}</td>
                     <td>
                         <button class="btn btn-danger" onclick="eliminarReporte('${reporte._id}')">Eliminar</button>
+                        <button class="btn btn-info" onclick="generarPDF(${JSON.stringify(reporte).replace(/"/g, '&quot;')})">Generar PDF</button>
                     </td>
                 `;
-                reportesBody.appendChild(row);
+                reportesBody.appendChild(tr);
             });
         })
-        .catch(error => {
-            console.error('Error al obtener los reportes:', error);
-        });
+        .catch(error => console.error('Error al obtener los reportes:', error));
     }
 });
