@@ -3,6 +3,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const path = require('path');
 require('dotenv').config();
 
 const app = express();
@@ -15,23 +16,25 @@ const reportRoutes = require('./routes/reportRoutes');
 app.use(cors());
 app.use(express.json());
 
-const uri = process.env.MONGODB_URI;
-
 // Conectar a MongoDB
+const uri = process.env.MONGODB_URI;
 mongoose.connect(uri, {
-    useNewUrlParser: true, // Añadido para compatibilidad con versiones más nuevas de MongoDB
-    useUnifiedTopology: true, // Añadido para manejar la topología de conexiones de manera óptima
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
     serverSelectionTimeoutMS: 50000 // 50 segundos
 })
     .then(() => console.log('Conectado a MongoDB'))
     .catch(err => console.error('Error al conectar a MongoDB:', err));
+
+// Servir los archivos estáticos del frontend
+app.use(express.static(path.join(__dirname, '../frontend')));
 
 // Usar las rutas de reportes
 app.use('/reportes', reportRoutes);
 
 // Ruta de prueba para la raíz
 app.get('/', (req, res) => {
-    res.send('Bienvenido al sistema de reportes');
+    res.sendFile(path.join(__dirname, '../frontend/index.html'));
 });
 
 // Iniciar el servidor
