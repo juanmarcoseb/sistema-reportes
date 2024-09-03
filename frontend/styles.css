@@ -1,0 +1,29 @@
+/* styles.css */
+
+/* Estilos para la tabla del historial de reportes */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+/* Color de fondo para los títulos de la tabla */
+th {
+    background-color: #007bff; /* Cambiar a azul Bootstrap */
+    color: white; /* Color del texto en blanco */
+    font-weight: bold;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tr:hover {
+    background-color: #e6f7ff;
+}
