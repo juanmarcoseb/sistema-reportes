@@ -26,15 +26,15 @@ mongoose.connect(uri, {
     .then(() => console.log('Conectado a MongoDB'))
     .catch(err => console.error('Error al conectar a MongoDB:', err));
 
-// Servir los archivos estáticos del frontend
-app.use(express.static(path.join(__dirname, '../frontend')));
+// Servir los archivos estáticos de la raíz del proyecto
+app.use(express.static(path.join(__dirname, '../')));
 
 // Usar las rutas de reportes
 app.use('/reportes', reportRoutes);
 
 // Ruta de prueba para la raíz
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../frontend/index.html'));
+    res.sendFile(path.join(__dirname, '../index.html'));
 });
 
 // Iniciar el servidor
