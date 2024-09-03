@@ -3,19 +3,19 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - main  # Cambia 'main' al nombre de tu rama principal si es diferente
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Deploy to GitHub Pages
-      uses: peaceiris/actions-gh-pages@v3
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./  # Directorio raíz del proyecto
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.DEPLOY_TOKEN }}  # Usa el secreto que guardaste
+          publish_dir: ./  # Directorio raíz del proyecto
+
 
